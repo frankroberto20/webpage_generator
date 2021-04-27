@@ -1,0 +1,85 @@
+{% extends 'webpage_generator/layout.html' %}
+{% load static %}
+
+{% block scripts %}
+    <script>
+        
+        let num_section = 1;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('section-num').value = num_section;
+        })
+
+        function add_section() {
+            const paragraphs = document.getElementById('section-group');
+
+            document.getElementById('add-section').remove();
+
+            num_section++;
+            
+            paragraphs.innerHTML += `
+            <div id="section-${num_section}">
+                <br/>
+                <div class="row">
+                    <legend class="col-9">Section ${num_section}</legend>
+                    <input type="button" class="btn btn-outline-danger btn-sm ml-auto mr-3" value="⛔" onclick="remove_section(${num_section})">
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label for="heading-${num_section}">Heading</label>
+                    <input id="heading-${num_section}" class="form-control" type="text" name="heading-${num_section}">
+                    <label for="content-${num_section}">Content</label>
+                    <textarea id="content-${num_section}" class="form-control" rows="5" type="text" name="content-${num_section}"></textarea>    
+                </div>
+            </div>
+            <input id="add-section" class="btn btn-success mt-2" type="button" value="Add ➕" onclick="add_section()">
+            `;
+            
+            document.getElementById('section-num').value = num_section;
+        }
+
+        function remove_section(section){
+            if (section == num_section){
+                document.getElementById(`section-${section}`).remove();
+                num_section--;
+            }
+            else {
+                for(i = 0; i < num_section - section; i++){
+                    
+                }
+            }
+        }
+
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        {% csrf_token %}
+        <h1>Create Page</h1>
+        <hr/>
+        <form action="{% url 'create_page' %}" method="post">
+            <input hidden id="section-num" type="number">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input class="form-control" type="text" name="title">
+            </div>
+            <br/>
+            <div id="section-group">
+                <div id="section-1">
+                    <legend>Section 1</legend>
+                    <hr/>
+                    <div class="form-group">
+                        <label for="heading-1">Heading</label>
+                        <input id="heading-1" class="form-control" type="text" name="title">
+                        <label for="content-1">Content</label>
+                        <textarea id="content-1" class="form-control" rows="5" type="text" name="title"></textarea>    
+                    </div>
+                </div>
+                <input id="add-section" class="btn btn-success mt-2" type="button" value="Add ➕" onclick="add_section()">
+            </div>
+            <hr/><br/>
+            <input class="btn btn-primary btn-lg" type="submit" value="Create">
+        </form>
+    </div>
+{% endblock %}

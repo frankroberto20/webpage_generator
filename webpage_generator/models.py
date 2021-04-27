@@ -8,4 +8,9 @@ class User(AbstractUser):
 
 class Page(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pages')
-    code = models.TextField(blank=False)
+    title = models.CharField(max_length=256, blank=False)
+
+class Section(models.Model):
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='sections')
+    heading = models.CharField(max_length=256, blank=False)
+    content = models.TextField(blank=False)

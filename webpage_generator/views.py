@@ -3,8 +3,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
 from django.urls import reverse
 from django.db import IntegrityError
+from django import forms
 
 from .models import *
+
+# Form models
+
+class PageForm(forms.ModelForm):
+    pass
 
 # Create your views here.
 
@@ -61,3 +67,23 @@ def register_view(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "webpage_generator/register.html")
+
+def create_page(request):
+    if request.method == 'GET':
+        return render(request, 'webpage_generator/create_page.html')
+    elif request.method == 'POST':
+        try:
+            sections_num = request.POST['section-num']
+            title = request.POST['title']
+            page = Page(title=title)
+
+            for i in range(sections_num):
+                heading = request.POST[f'heading-{i}']
+                content = request.POST[f'content-{i}']
+                section = Section(page=page, heading=heading, content=content)
+                section.save()
+
+            page.save()
+        except:
+            pass
+         
